@@ -1,2 +1,9 @@
-# library-management
-This es a portfolio project far an api using nodejs and postgres
+
+# Project Library Management
+
+# Proyecto de administracion de biblioteca
+
+Este proyecto de administración de bibliotecas esta hecho con las tecnologías de nodejs postgres
+
+This project is for libraray management done wiht nodejs and postgres
+

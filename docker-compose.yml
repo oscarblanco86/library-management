@@ -1,0 +1,70 @@
+version: '3.8'
+
+networks:
+  library-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1
+
+services:
+  frontend:
+    image: node:14
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - '3000:3000'
+    command: sh -c "npm install && npm start"
+    depends_on:
+      - backend
+    networks:
+      library-net:
+        ipv4_address: 172.19.0.4
+
+  backend:
+    image: node:14
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - '5000:5000'
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - db
+    networks:
+      library-net:
+        ipv4_address: 172.19.0.5
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} 
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      library-net:
+        ipv4_address: 172.19.0.2
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+    networks:
+      library-net:
+        ipv4_address: 172.19.0.3
+
+volumes:
+  db_data:

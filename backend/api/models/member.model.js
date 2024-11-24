@@ -1,5 +1,4 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const { defaultValueSchemable } = require('sequelize/lib/utils');
 
 const MEMBER_TABLE = 'members';
 

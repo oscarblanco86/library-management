@@ -43,7 +43,8 @@ const BorrowSchema = {
 
 class Borrow extends Model {
     static associate(models) {
-      
+        Borrow.belongsTo(models.Book, { foreignKey: 'bookId' }); 
+        Borrow.belongsTo(models.Member, { foreignKey: 'memberId' });
     }
 
     static config(sequelize) {

@@ -1,4 +1,6 @@
 const { Model, DataTypes, Squelize } = require('sequelize');
+const { AUTHOR_TABLE } = require('./author.model');
+const { GENRE_TABLE } = require('./genre.model');
 
 const BOOK_TABLE = 'books';
 
@@ -19,10 +21,22 @@ const BookSchema = {
     authorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        refernces: {
+            model: AUTHOR_TABLE,
+            key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     },
     genreId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        refernces: {
+            model: GENRE_TABLE,
+            key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     },
     ISBN: {
         type: DataTypes.STRING,
@@ -41,8 +55,8 @@ const BookSchema = {
 
 class Book extends Model {
     static associate(models) {
-        // Book.belongsTo(models.Author, { foreignKey: 'authorId' });
-        // Book.belongsTo(models.Genre, { foreignKey: 'genreId' });
+        Book.belongsTo(models.Author, { foreignKey: 'authorId' });
+        Book.belongsTo(models.Genre, { foreignKey: 'genreId' });
     }
     static config(sequelize) {
         return {

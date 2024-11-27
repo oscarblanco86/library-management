@@ -4,6 +4,7 @@ const routerApi = require('./routes');
 const app = express();
 const port = process.env.PORT || 5000;
 
+//MiddleWares
 app.use(express.json());
 
 app.get('/api', (req,res) => {

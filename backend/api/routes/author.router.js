@@ -1,22 +1,34 @@
 const express = require('express');
-const { Author } = require('./../models/author.model');
+
 const AuthorService = require('../service/author.service');
+const schema = require('./../schemas/author.schema');
+const validatorHandler = require('../Middlewares/validator.handler');
 
 const router = express.Router();
 const service = new AuthorService();
 
-router.get('/',
-    async (req, res, next) => {
-        try {
-            const author = await service.find();
-            res.json(author);
-        } catch (error) {
-            next(error);
-        }
+router.get('/', async (req, res, next) => {
+    const { limit, offset } = req.query;
+    try {
+        const authors = await service.find(parseInt(limit) || 10, parseInt(offset) || 0);
+        res.json(authors);
+    } catch (error) {
+        next(error);
     }
-)
+});
+
+router.get('/search', async (req, res, next) => {
+    const { query } = req.query;
+    try {
+        const authors = await service.search(query);
+        res.json(authors);
+    } catch (error) {
+        next(error);
+    }
+});
 
 router.get('/:id',
+    validatorHandler(schema.getAuthorSchema, 'params'),
     async (req, res, next) => {
         try {
             const { id } = req.params;
@@ -26,20 +38,38 @@ router.get('/:id',
             next(error);
         }
     }
-)
+);
 
 router.post('/',
-    async (req,res) => {
-        const body = req.body;
-        const newAuthor = await service.create(body);
-        res.status(201).json({
-            message: 'Created',
-            ...newAuthor
-        })
+    validatorHandler(schema.createAuthorSchema, 'body'),
+    async (req, res, next) => {
+        try {
+            const body = req.body;
+            const newAuthor = await service.create(body);
+            res.status(201).json(newAuthor);
+        } catch (error) {
+            next(error);
+        }
     }
-)
+);
+
+router.put('/:id',
+    validatorHandler(schema.getAuthorSchema, 'params'),
+    validatorHandler(schema.updateAuthorSchema, 'body'),
+    async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const body = req.body;
+            const author = await service.update(id, body);
+            res.json(author);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 router.delete('/:id',
+    validatorHandler(schema.getAuthorSchema, 'params'),
     async (req, res, next) => {
         try {
             const { id } = req.params;
@@ -49,7 +79,6 @@ router.delete('/:id',
             next(error);
         }
     }
-)
-
+);
 
 module.exports = router;

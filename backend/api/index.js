@@ -1,5 +1,6 @@
 const express = require('express');
 const routerApi = require('./routes');
+const handler = require('./Middlewares/error.handler');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -11,6 +12,8 @@ app.get('/api', (req,res) => {
     res.send('Library management API using express')
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
-
 routerApi(app);
+
+app.use(handler.boomHandlerLogError)
+
+app.listen(port, () => console.log(`Server running on port ${port}`));

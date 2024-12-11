@@ -2,7 +2,7 @@ const express = require('express');
 
 const AuthorService = require('../service/author.service');
 const schema = require('./../schemas/author.schema');
-const validatorHandler = require('../Middlewares/validator.handler');
+const validatorHandler = require('../middlewares/validator.handler');
 
 const router = express.Router();
 const service = new AuthorService();

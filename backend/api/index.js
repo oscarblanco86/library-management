@@ -1,6 +1,6 @@
 const express = require('express');
 const routerApi = require('./routes');
-const handler = require('./Middlewares/error.handler');
+const handler = require('./middlewares/error.handler');
 
 const app = express();
 const port = process.env.PORT || 5000;
